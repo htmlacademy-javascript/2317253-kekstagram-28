@@ -1,27 +1,31 @@
+const ERROR_MESSAGE_DELAY = 5000;
 
-//Функция для генерации случайного числа
-const getRandomInteger = (min, max) => {
-  const lower = Math.ceil(Math.min(min, max));
-  const upper = Math.floor(Math.max(min, max));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};
+const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger};
-
-const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
-
-export {getRandomArrayElement};
-
-const createIdGenerator = () => {
-  let lastGenerateId = 0;
-
-  return () => {
-    lastGenerateId += 1;
-    return lastGenerateId;
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 };
 
-const generateCommentId = createIdGenerator();
+const showAlert = (message) => {
+  const alert = document.createElement('div');
+  alert.style.position = 'absolute';
+  alert.style.zIndex = '500';
+  alert.style.let = '0';
+  alert.style.top = '0';
+  alert.style.padding = '10px 3px';
+  alert.style.fontSize = '30px';
+  alert.style.textAlign = 'center';
+  alert.style.backgroundColor = 'red';
+  alert.textContent = message;
+  document.body.append(alert);
 
-export {generateCommentId};
+  setTimeout(() => {
+    alert.remove();
+  }, ERROR_MESSAGE_DELAY);
+};
+
+export { isEscapeKey, showAlert, debounce };
