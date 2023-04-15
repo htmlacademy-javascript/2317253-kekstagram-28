@@ -21,17 +21,9 @@ const successButtonElement = document.querySelector('#success').content.querySel
 const errorElement = document.querySelector('#error').content.querySelector('.error'); //попап с ошибкой загрузки изображения
 const errorButtonElement = document.querySelector('#error').content.querySelector('.error__button'); //кнопка Попробовать ещё раз
 
-//  добавляет попапам success u error класс hidden
 const hideModalMessage = () => {
   successElement.classList.add('hidden');
   errorElement.classList.add('hidden');
-};
-
-//добавляет попапам success u error класс hidden и удаляет обработчик событий при нажатии на кнопку круто
-const onCloseButtonClick = () => {
-  console.log("Тест");
-  hideModalMessage();
-  successButtonElement.removeEventListener('click', onCloseButtonClick);
 };
 
 const onBodyClick = (evt) => {
@@ -49,6 +41,14 @@ const onEscPress = (evt) => {
   }
 };
 
+const onCloseButtonClick = () => {
+  hideModalMessage();
+  successButtonElement.removeEventListener('click', onCloseButtonClick);
+  errorButtonElement.removeEventListener('click', onCloseButtonClick);
+  document.removeEventListener('click', onBodyClick);
+  document.removeEventListener('keydown', onEscPress);
+};
+
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
@@ -59,8 +59,6 @@ const showModal = () => {
   overlay.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
-  //successButtonElement.addEventListener('click', onCloseButtonClick);
-  console.log("Тест2");
 };
 
 const hideModal = () => {
@@ -125,8 +123,6 @@ const blockSubmitButton = () => {
 };
 
 const showSuccessMessage = () => {
-  console.log("showsuccess");
-  //successButtonElement.addEventListener('click', onCloseButtonClick);
   let flag = false;
   return () => {
     if (!flag) {
@@ -172,10 +168,6 @@ const onFormSubmit = (cb) => {
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
-      /*successButtonElement.addEventListener('click', onCloseButtonClick);
-      errorButtonElement.addEventListener('click', onCloseButtonClick);
-      document.addEventListener('keydown', onEscPress);
-      document.addEventListener('click', onBodyClick);*/
       await cb(new FormData(form));
       unblockSubmitButton();
     }

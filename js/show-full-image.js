@@ -9,7 +9,7 @@ const commentsCountElement = document.querySelector('.comments-count');
 
 const VISIBLE_COMMENTS = 5;
 let shownComments = 0;
-let loadMoreComments = null;
+let onButtonLoadMoreComments = null;
 
 const renderComments = (data) => {
   shownComments += VISIBLE_COMMENTS;
@@ -57,19 +57,19 @@ const openFullImage = (item, data) => {
     document.querySelector('.big-picture .social__caption').textContent = data.description;
     document.querySelector('.social__comments').innerHTML = '';
     renderComments(data);
-    loadMoreComments = addSomeComments.bind(null, data);
-    commentsLoader.addEventListener('click', loadMoreComments);
+    onButtonLoadMoreComments = addSomeComments.bind(null, data);
+    commentsLoader.addEventListener('click', onButtonLoadMoreComments);
     document.addEventListener('keydown', onDocumentKeydown);
     closeButton.addEventListener('click', onClickButtonClose);
   });
 };
 
-function closeFullImage() {
+function closeFullImage () {
   document.querySelector('.big-picture').classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
   shownComments = 0;
-  commentsLoader.removeEventListener('click', loadMoreComments);
+  commentsLoader.removeEventListener('click', onButtonLoadMoreComments);
 }
 
 export { openFullImage };
