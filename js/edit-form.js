@@ -26,28 +26,34 @@ const hideModalMessage = () => {
   errorElement.classList.add('hidden');
 };
 
-const onBodyClick = (evt) => {
+function onBodyClick(evt) {
   evt.stopPropagation();
   if (evt.target.matches('.success') || evt.target.matches('.error')) {
     hideModalMessage();
+    successButtonElement.removeEventListener('click', onCloseButtonClick);
+    errorButtonElement.removeEventListener('click', onCloseButtonClick);
     document.removeEventListener('click', onBodyClick);
-  }
-};
-
-const onEscPress = (evt) => {
-  if (isEscapeKey(evt)) {
-    hideModalMessage();
     document.removeEventListener('keydown', onEscPress);
   }
-};
+}
 
-const onCloseButtonClick = () => {
+function onEscPress(evt) {
+  if (isEscapeKey(evt)) {
+    hideModalMessage();
+    successButtonElement.removeEventListener('click', onCloseButtonClick);
+    errorButtonElement.removeEventListener('click', onCloseButtonClick);
+    document.removeEventListener('click', onBodyClick);
+    document.removeEventListener('keydown', onEscPress);
+  }
+}
+
+function onCloseButtonClick () {
   hideModalMessage();
   successButtonElement.removeEventListener('click', onCloseButtonClick);
   errorButtonElement.removeEventListener('click', onCloseButtonClick);
   document.removeEventListener('click', onBodyClick);
   document.removeEventListener('keydown', onEscPress);
-};
+}
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
