@@ -6,20 +6,48 @@ const MAX_HASHTAGS_COUNT = 5;
 const HASHTAGS_RULES = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAGS_ERROR_TEXT = 'Неправильно прописаны хештеги';
 
-const form = document.querySelector('.img-upload__form');
-const submitButton = form.querySelector('.img-upload__submit');
-const hashtagField = document.querySelector('.text__hashtags');
-const commentField = document.querySelector('.text__description');
-const fileField = document.querySelector('#upload-file');
+const form = document.querySelector('.img-upload__form'); //Поле для загрузки нового изображения на сайт
+const submitButton = form.querySelector('.img-upload__submit'); //кнопка опубликовать
+const hashtagField = document.querySelector('.text__hashtags'); //поле для хештэга
+const commentField = document.querySelector('.text__description'); //поле для коммента
+const fileField = document.querySelector('#upload-file'); //Изначальное состояние поля для загрузки изображения
 const overlay = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
 const cancelButton = document.querySelector('#upload-cancel');
 
-const successElement = document.querySelector('#success').content.querySelector('.success');
-const successButtonElement = document.querySelector('#success').content.querySelector('.success__button');
+const successElement = document.querySelector('#success').content.querySelector('.success'); //попап об успешной загрузке изображения
+const successButtonElement = document.querySelector('#success').content.querySelector('.success__button'); //кнопка круто
 
-const errorElement = document.querySelector('#error').content.querySelector('.error');
-const errorButtonElement = document.querySelector('#error').content.querySelector('.error__button');
+const errorElement = document.querySelector('#error').content.querySelector('.error'); //попап с ошибкой загрузки изображения
+const errorButtonElement = document.querySelector('#error').content.querySelector('.error__button'); //кнопка Попробовать ещё раз
+
+//  добавляет попапам success u error класс hidden
+const hideModalMessage = () => {
+  successElement.classList.add('hidden');
+  errorElement.classList.add('hidden');
+};
+
+//добавляет попапам success u error класс hidden и удаляет обработчик событий при нажатии на кнопку круто
+const onCloseButtonClick = () => {
+  console.log("Тест");
+  hideModalMessage();
+  successButtonElement.removeEventListener('click', onCloseButtonClick);
+};
+
+const onBodyClick = (evt) => {
+  evt.stopPropagation();
+  if (evt.target.matches('.success') || evt.target.matches('.error')) {
+    hideModalMessage();
+    document.removeEventListener('click', onBodyClick);
+  }
+};
+
+const onEscPress = (evt) => {
+  if (isEscapeKey(evt)) {
+    hideModalMessage();
+    document.removeEventListener('keydown', onEscPress);
+  }
+};
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -31,6 +59,8 @@ const showModal = () => {
   overlay.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
+  //successButtonElement.addEventListener('click', onCloseButtonClick);
+  console.log("Тест2");
 };
 
 const hideModal = () => {
@@ -43,11 +73,11 @@ const hideModal = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-const ifInTextFieldFocused = () =>
+const isInFocused = () =>
   document.activeElement === hashtagField || document.activeElement === commentField;
 
 function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt) && !ifInTextFieldFocused()) {
+  if (isEscapeKey(evt) && !isInFocused()) {
     evt.preventDefault();
     const hasHiddenPopup = document.querySelector('.error');
     if (!hasHiddenPopup) {
@@ -95,14 +125,22 @@ const blockSubmitButton = () => {
 };
 
 const showSuccessMessage = () => {
+  console.log("showsuccess");
+  //successButtonElement.addEventListener('click', onCloseButtonClick);
   let flag = false;
   return () => {
     if (!flag) {
       flag = true;
       document.body.append(successElement);
+      successButtonElement.addEventListener('click', onCloseButtonClick);
+      document.addEventListener('keydown', onEscPress);
+      document.addEventListener('click', onBodyClick);
     } else {
       const successElementClone = document.querySelector('.success');
       successElementClone.classList.remove('hidden');
+      successButtonElement.addEventListener('click', onCloseButtonClick);
+      document.addEventListener('keydown', onEscPress);
+      document.addEventListener('click', onBodyClick);
     }
   };
 };
@@ -114,37 +152,19 @@ const showErrorMessage = () => {
     if (!flag) {
       flag = true;
       document.body.append(errorElement);
+      errorButtonElement.addEventListener('click', onCloseButtonClick);
+      document.addEventListener('keydown', onEscPress);
+      document.addEventListener('click', onBodyClick);
     } else {
       const errorElementClone = document.querySelector('.error');
       errorElementClone.classList.remove('hidden');
+      errorButtonElement.addEventListener('click', onCloseButtonClick);
+      document.addEventListener('keydown', onEscPress);
+      document.addEventListener('click', onBodyClick);
     }
   };
 };
 const showFullErrorMessage = showErrorMessage();
-
-const hideModalMessage = () => {
-  successElement.classList.add('hidden');
-  errorElement.classList.add('hidden');
-};
-
-const onBodyClick = (evt) => {
-  evt.stopPropagation();
-  if (evt.target.matches('.success') || evt.target.matches('.error')) {
-    hideModalMessage();
-    document.removeEventListener('click', onBodyClick);
-  }
-};
-
-const onCloseButtonClick = () => {
-  hideModalMessage();
-};
-
-const onEscPress = (evt) => {
-  if (isEscapeKey(evt)) {
-    hideModalMessage();
-    document.removeEventListener('keydown', onEscPress);
-  }
-};
 
 const onFormSubmit = (cb) => {
   form.addEventListener('submit', async (evt) => {
@@ -152,10 +172,10 @@ const onFormSubmit = (cb) => {
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
-      successButtonElement.addEventListener('click', onCloseButtonClick);
+      /*successButtonElement.addEventListener('click', onCloseButtonClick);
       errorButtonElement.addEventListener('click', onCloseButtonClick);
       document.addEventListener('keydown', onEscPress);
-      document.addEventListener('click', onBodyClick);
+      document.addEventListener('click', onBodyClick);*/
       await cb(new FormData(form));
       unblockSubmitButton();
     }
