@@ -1,10 +1,13 @@
+const WIDTH_VALUE = 35;
+const HEIGHT_VALUE = 35;
+
 const createPictureInComment = (data) => {
   const pictureImg = document.createElement('img');
   pictureImg.classList.add('social__picture');
   pictureImg.setAttribute('src', data.avatar);
   pictureImg.setAttribute('alt', data.name);
-  pictureImg.setAttribute('width', 35);
-  pictureImg.setAttribute('height', 35);
+  pictureImg.setAttribute('width', WIDTH_VALUE);
+  pictureImg.setAttribute('height', HEIGHT_VALUE);
   return pictureImg;
 };
 
