@@ -6,20 +6,20 @@ const MAX_HASHTAGS_COUNT = 5;
 const HASHTAGS_RULES = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAGS_ERROR_TEXT = 'Неправильно прописаны хештеги';
 
-const form = document.querySelector('.img-upload__form'); //Поле для загрузки нового изображения на сайт
-const submitButton = form.querySelector('.img-upload__submit'); //кнопка опубликовать
-const hashtagField = document.querySelector('.text__hashtags'); //поле для хештэга
-const commentField = document.querySelector('.text__description'); //поле для коммента
-const fileField = document.querySelector('#upload-file'); //Изначальное состояние поля для загрузки изображения
+const form = document.querySelector('.img-upload__form');
+const submitButton = form.querySelector('.img-upload__submit');
+const hashtagField = document.querySelector('.text__hashtags');
+const commentField = document.querySelector('.text__description');
+const fileField = document.querySelector('#upload-file');
 const overlay = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
 const cancelButton = document.querySelector('#upload-cancel');
 
-const successElement = document.querySelector('#success').content.querySelector('.success'); //попап об успешной загрузке изображения
-const successButtonElement = document.querySelector('#success').content.querySelector('.success__button'); //кнопка круто
+const successElement = document.querySelector('#success').content.querySelector('.success');
+const successButtonElement = document.querySelector('#success').content.querySelector('.success__button');
 
-const errorElement = document.querySelector('#error').content.querySelector('.error'); //попап с ошибкой загрузки изображения
-const errorButtonElement = document.querySelector('#error').content.querySelector('.error__button'); //кнопка Попробовать ещё раз
+const errorElement = document.querySelector('#error').content.querySelector('.error');
+const errorButtonElement = document.querySelector('#error').content.querySelector('.error__button');
 
 const hideModalMessage = () => {
   successElement.classList.add('hidden');
